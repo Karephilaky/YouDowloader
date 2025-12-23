@@ -1,0 +1,25 @@
+# 🎥 Descargador de YouTube con Tkinter + yt-dlp
+
+Aplicación de escritorio simple en **Python** para descargar videos o audios de YouTube con una interfaz gráfica amigable (Tkinter).  
+Permite elegir entre **Video** (hasta 8K) o **Audio (MP3)**, seleccionar calidad y guardar en la carpeta deseada.  
+
+![UI Screenshot](UI.jpg) <!-- coloca una captura de tu app aquí -->
+
+---
+
+## ✨ Funcionalidades
+- ✅ Descargar **video en diferentes calidades**: 720p, 1080p, 1440p, 4K y 8K.  
+- ✅ Descargar **solo audio en MP3** (requiere FFmpeg).  
+- ✅ Selección de carpeta de destino.  
+- ✅ Barra de progreso visual.  
+- ✅ Integración automática con **FFmpeg** (sin necesidad de configurar el PATH global).
+
+---
+
+## 🛠 Requisitos
+
+- **Python 3.9+**
+- **pip** actualizado
+- Librerías:
+  ```bash
+  pip install yt-dlp
