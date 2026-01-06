@@ -19,7 +19,7 @@ FFMPEG_EXE = os.path.join(FFMPEG_BIN, "ffmpeg.exe")
 # =========================
 def build_common_opts(cookies_path=None, progress_hook=None):
     opts = {
-        "quiet": True,  # silenciamos consola, usamos GUI
+        "quiet": True,
         "noprogress": True,
         "ffmpeg_location": FFMPEG_BIN if os.path.exists(FFMPEG_EXE) else None,
         "retries": 10,
@@ -38,8 +38,8 @@ def build_common_opts(cookies_path=None, progress_hook=None):
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("YouDownload — Selector de calidad")
-        self.geometry("820x580")
+        self.title("YouDownload — completo")
+        self.geometry("860x640")
         self.resizable(False, False)
 
         self.url_var = tk.StringVar()
@@ -47,6 +47,8 @@ class App(tk.Tk):
         self.cookies_path = tk.StringVar()
 
         self.quality_var = tk.StringVar(value="best")
+        self.mode_var = tk.StringVar(value="video_audio")  # video_audio | video | audio
+
         self.available_qualities = {}
 
         # progreso
@@ -75,13 +77,23 @@ class App(tk.Tk):
 
         ttk.Button(frm, text="Analizar video", command=self.analyze).grid(row=3, column=1, pady=10)
 
-        self.info_lbl = ttk.Label(self, text="Información del video aparecerá aquí", wraplength=780)
+        # Info
+        self.info_lbl = ttk.Label(self, text="Información del video aparecerá aquí", wraplength=820)
         self.info_lbl.pack(pady=8)
 
+        # ---- MODO ----
+        mf = ttk.LabelFrame(self, text="Tipo de descarga")
+        mf.pack(pady=6)
+
+        ttk.Radiobutton(mf, text="🎬 Video + audio", variable=self.mode_var, value="video_audio").pack(anchor="w")
+        ttk.Radiobutton(mf, text="🎥 Solo video", variable=self.mode_var, value="video").pack(anchor="w")
+        ttk.Radiobutton(mf, text="🎧 Solo audio", variable=self.mode_var, value="audio").pack(anchor="w")
+
+        # ---- CALIDAD ----
         qf = ttk.Frame(self)
         qf.pack(pady=6)
 
-        ttk.Label(qf, text="Calidad:").pack(side="left")
+        ttk.Label(qf, text="Calidad de video:").pack(side="left")
         self.quality_combo = ttk.Combobox(
             qf,
             textvariable=self.quality_var,
@@ -92,14 +104,8 @@ class App(tk.Tk):
 
         ttk.Button(self, text="Descargar", command=self.download).pack(pady=10)
 
-        # ---- Progreso ----
-        ttk.Progressbar(
-            self,
-            variable=self.progress_var,
-            maximum=100,
-            length=760
-        ).pack(pady=6)
-
+        # ---- PROGRESO ----
+        ttk.Progressbar(self, variable=self.progress_var, maximum=100, length=800).pack(pady=6)
         ttk.Label(self, textvariable=self.progress_text).pack()
 
     # =========================
@@ -166,7 +172,7 @@ class App(tk.Tk):
         threading.Thread(target=worker, daemon=True).start()
 
     # =========================
-    # DESCARGA + PROGRESO
+    # DESCARGA
     # =========================
     def download(self):
         url = self.url_var.get().strip()
@@ -176,12 +182,23 @@ class App(tk.Tk):
         if not url or not outdir:
             return
 
-        choice = self.quality_var.get()
-        if choice == "best (automático)":
-            fmt = "best"
+        mode = self.mode_var.get()
+        quality = self.quality_var.get()
+
+        # ---- construir formato ----
+        if mode == "audio":
+            fmt = "bestaudio/best"
         else:
-            h = int(choice.replace("p", ""))
-            fmt = f"bestvideo[height={h}]+bestaudio/best"
+            if quality == "best (automático)":
+                base = "bestvideo"
+            else:
+                h = int(quality.replace("p", ""))
+                base = f"bestvideo[height={h}]"
+
+            if mode == "video":
+                fmt = f"{base}/bestvideo"
+            else:
+                fmt = f"{base}+bestaudio/best"
 
         self.progress_var.set(0)
         self.progress_text.set("Iniciando descarga…")
@@ -193,17 +210,10 @@ class App(tk.Tk):
                 if total:
                     percent = downloaded / total * 100
                     self.after(0, lambda: self.progress_var.set(percent))
-                    speed = d.get("speed")
-                    eta = d.get("eta")
                     txt = f"Descargando… {percent:.1f}%"
-                    if speed:
-                        txt += f" | {speed/1024/1024:.2f} MB/s"
-                    if eta:
-                        txt += f" | ETA {eta}s"
                     self.after(0, lambda: self.progress_text.set(txt))
-
             elif d["status"] == "finished":
-                self.after(0, lambda: self.progress_text.set("Procesando (ffmpeg)…"))
+                self.after(0, lambda: self.progress_text.set("Procesando…"))
 
         def worker():
             try:
@@ -215,7 +225,7 @@ class App(tk.Tk):
                     ydl.download([url])
 
                 self.after(0, lambda: self.progress_var.set(100))
-                self.after(0, lambda: self.progress_text.set("Descarga completada ✅"))
+                self.after(0, lambda: self.progress_text.set("Completado ✅"))
                 self.after(0, lambda: messagebox.showinfo("Listo", "Descarga completada"))
 
             except Exception as e:

@@ -1,25 +1,368 @@
-# 🎥 Descargador de YouTube con Tkinter + yt-dlp
+# 🎥 YouDownload — YouTube Downloader (Tkinter + yt-dlp)
 
-Aplicación de escritorio simple en **Python** para descargar videos o audios de YouTube con una interfaz gráfica amigable (Tkinter).  
-Permite elegir entre **Video** (hasta 8K) o **Audio (MP3)**, seleccionar calidad y guardar en la carpeta deseada.  
+Desktop application built with **Python** and **Tkinter** to download YouTube content through a simple and user-friendly graphical interface.
 
-![UI Screenshot](UI.jpg) <!-- coloca una captura de tu app aquí -->
+It allows downloading:
+- 🎬 **Video + audio** (up to 8K)
+- 🎥 **Video only**
+- 🎧 **Audio only** (best quality / MP3)
+
+Includes **local FFmpeg support**, without requiring global PATH configuration.
+
+![UI Screenshot](UI.jpg)
 
 ---
 
-## ✨ Funcionalidades
-- ✅ Descargar **video en diferentes calidades**: 720p, 1080p, 1440p, 4K y 8K.  
-- ✅ Descargar **solo audio en MP3** (requiere FFmpeg).  
-- ✅ Selección de carpeta de destino.  
-- ✅ Barra de progreso visual.  
-- ✅ Integración automática con **FFmpeg** (sin necesidad de configurar el PATH global).
+## ✨ Features
+
+- ✅ Video download in multiple qualities  
+  `720p · 1080p · 1440p · 4K · 8K`
+- ✅ Audio-only download
+- ✅ Destination folder selector
+- ✅ Real-time progress bar
+- ✅ Video analysis (resolution, FPS, codec)
+- ✅ Optional **cookies** support
+- ✅ Portable local FFmpeg integration
+
+---
+
+## 📁 Project Structure
+
+The project **expects the following structure**:
+
+```text
+YOUDOWNLOADER/
+│
+├── ffmpeg-8.0-full_build/
+│   └── bin/
+│       └── ffmpeg.exe
+│
+├── venv/                  # (optional) virtual environment
+├── main.py
+├── requirements.txt
+├── README.md
+└── UI.jpg
+```
+
+⚠️ **Important**  
+The `ffmpeg-8.0-full_build` folder must be located **at the same level as `main.py`**.  
+The application automatically detects `ffmpeg.exe` from this location.
+
+---
+
+## 🧠 Why is FFmpeg required?
+
+FFmpeg is required to:
+
+- 🔊 Extract audio (MP3 / bestaudio)
+- 🎞 Merge video + audio streams
+- 🎚 Handle post-processing and conversions
+
+Internally, the app uses:
+
+```python
+"ffmpeg_location": FFMPEG_BIN
+```
+
+So **FFmpeg does NOT need to be installed system-wide**.
+
+---
+
+## 🛠 Requirements
+
+### 1️⃣ Python
+
+- **Python 3.9 or higher**
+
+Check with:
+
+```bash
+python --version
+```
+
+---
+
+### 2️⃣ Install dependencies
+
+Install required libraries using:
+
+```bash
+pip install -r requirements.txt
+```
+
+Minimal `requirements.txt` content:
+
+```txt
+yt-dlp
+```
+
+> Tkinter is included by default with Python on Windows.
+
+---
+
+### 3️⃣ FFmpeg (required)
+
+Download FFmpeg (Windows full build):
+
+👉 https://www.gyan.dev/ffmpeg/builds/
+
+Steps:
+1. Download **ffmpeg-*-full_build.zip**
+2. Extract it
+3. Rename the folder to:
+
+```text
+ffmpeg-8.0-full_build
+```
+
+4. Place it inside the project directory
+
+---
+
+## ▶️ Running the application
+
+From the project directory:
+
+```bash
+python main.py
+```
+
+The GUI will open.
+
+---
+
+## 🎛 Download modes
+
+### 🎬 Video + audio
+- Downloads the best available video
+- Automatically merges audio
+- Recommended for maximum quality
+
+### 🎥 Video only
+- Downloads video stream only
+- No audio included
+
+### 🎧 Audio only
+- Downloads best available audio
+- Requires FFmpeg
+- Ideal for music, podcasts, interviews
+
+---
+
+## 🍪 Cookies (optional)
+
+Some videos require cookies (private, age-restricted, region-locked).
+
+You can:
+1. Export cookies from your browser (`.txt`)
+2. Load them through the UI
+
+They are passed directly to `yt-dlp`.
+
+---
+
+## ⚠️ Notes
+
+- 4K / 8K availability depends on the source video
+- File names are generated from the video title
+- Some videos may fail due to YouTube restrictions
+
+---
+
+## 📜 Disclaimer
+
+This project is intended for **educational and personal use only**.  
+Users are responsible for complying with YouTube’s Terms of Service and local laws.
+
+---
+
+## 🧑‍💻 Author
+
+Developed by **Johannes Carofilis**  
+Python · Tkinter · yt-dlp · FFmpeg
+
+---
+---
+
+# 🎥 YouDownload — Descargador de YouTube (Tkinter + yt-dlp)
+
+Aplicación de escritorio desarrollada en **Python** con **Tkinter** para descargar contenido de YouTube mediante una interfaz gráfica simple.
+
+Permite descargar:
+- 🎬 **Video + audio** (hasta 8K)
+- 🎥 **Solo video**
+- 🎧 **Solo audio** (mejor calidad / MP3)
+
+Incluye soporte para **FFmpeg local**, sin necesidad de configurarlo en el PATH del sistema.
+
+![UI Screenshot](UI.jpg)
+
+---
+
+## ✨ Características
+
+- ✅ Descarga de video en múltiples calidades  
+  `720p · 1080p · 1440p · 4K · 8K`
+- ✅ Descarga de solo audio
+- ✅ Selector de carpeta de destino
+- ✅ Barra de progreso en tiempo real
+- ✅ Análisis del video (resolución, FPS y codec)
+- ✅ Soporte opcional para **cookies**
+- ✅ Integración portable de FFmpeg
+
+---
+
+## 📁 Estructura del proyecto
+
+El proyecto **asume la siguiente estructura**:
+
+```text
+YOUDOWNLOADER/
+│
+├── ffmpeg-8.0-full_build/
+│   └── bin/
+│       └── ffmpeg.exe
+│
+├── venv/                  # (opcional) entorno virtual
+├── main.py
+├── requirements.txt
+├── README.md
+└── UI.jpg
+```
+
+⚠️ **Importante**  
+La carpeta `ffmpeg-8.0-full_build` debe estar **al mismo nivel que `main.py`**.  
+La aplicación detecta automáticamente `ffmpeg.exe` desde esa ubicación.
+
+---
+
+## 🧠 ¿Para qué sirve FFmpeg?
+
+FFmpeg es necesario para:
+
+- 🔊 Extraer audio (MP3 / bestaudio)
+- 🎞 Unir video y audio
+- 🎚 Procesar y convertir formatos
+
+Internamente se usa:
+
+```python
+"ffmpeg_location": FFMPEG_BIN
+```
+
+Por ello **no es necesario instalar FFmpeg globalmente**.
 
 ---
 
 ## 🛠 Requisitos
 
-- **Python 3.9+**
-- **pip** actualizado
-- Librerías:
-  ```bash
-  pip install yt-dlp
+### 1️⃣ Python
+
+- **Python 3.9 o superior**
+
+Verifica con:
+
+```bash
+python --version
+```
+
+---
+
+### 2️⃣ Instalar dependencias
+
+Instala las librerías necesarias con:
+
+```bash
+pip install -r requirements.txt
+```
+
+Contenido mínimo:
+
+```txt
+yt-dlp
+```
+
+> Tkinter viene incluido por defecto en Python para Windows.
+
+---
+
+### 3️⃣ FFmpeg (obligatorio)
+
+Descargar FFmpeg (build completo para Windows):
+
+👉 https://www.gyan.dev/ffmpeg/builds/
+
+Pasos:
+1. Descargar **ffmpeg-*-full_build.zip**
+2. Extraer el contenido
+3. Renombrar la carpeta a:
+
+```text
+ffmpeg-8.0-full_build
+```
+
+4. Colocarla dentro del proyecto
+
+---
+
+## ▶️ Ejecución
+
+Desde la carpeta del proyecto:
+
+```bash
+python main.py
+```
+
+Se abrirá la interfaz gráfica.
+
+---
+
+## 🎛 Modos de descarga
+
+### 🎬 Video + audio
+- Descarga el mejor video disponible
+- Une el audio automáticamente
+- Recomendado para máxima calidad
+
+### 🎥 Solo video
+- Descarga solo el stream de video
+- No incluye audio
+
+### 🎧 Solo audio
+- Descarga el mejor audio disponible
+- Requiere FFmpeg
+- Ideal para música, podcasts o entrevistas
+
+---
+
+## 🍪 Cookies (opcional)
+
+Algunos videos requieren cookies (privados, restricción de edad o región).
+
+Puedes:
+1. Exportar cookies del navegador (`.txt`)
+2. Cargarlas desde la interfaz
+
+Se pasan directamente a `yt-dlp`.
+
+---
+
+## ⚠️ Notas
+
+- La disponibilidad de 4K / 8K depende del video original
+- El nombre del archivo se genera a partir del título
+- Algunos videos pueden fallar por restricciones de YouTube
+
+---
+
+## 📜 Aviso legal
+
+Este proyecto es **educativo y de uso personal**.  
+El uso es responsabilidad del usuario final.
+
+---
+
+## 🧑‍💻 Autor
+
+Desarrollado por **Johannes Carofilis**  
+Python · Tkinter · yt-dlp · FFmpeg
